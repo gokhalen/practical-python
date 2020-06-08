@@ -19,6 +19,7 @@ def read_portfolio(filename):
     
 portfolio=read_portfolio('Data/portfolio.csv')
 
+'''
 total=0.0
 for dd in portfolio:
      shares = dd["shares"]
@@ -26,3 +27,4 @@ for dd in portfolio:
      total += shares*price
 
 print(total)
+'''
