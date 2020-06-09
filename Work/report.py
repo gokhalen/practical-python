@@ -14,7 +14,10 @@ def read_portfolio(filename):
         rows = csv.reader(f)
         headers = next(rows)
         for row in rows:
-            name, shares, price = row
+            drow = dict(zip(headers,row))
+            name   = drow["name"]
+            shares = drow["shares"]
+            price  = drow["price"]
             dd = {"name":name,"shares":int(shares),"price":float(price)}
             portfolio.append(dd)
     

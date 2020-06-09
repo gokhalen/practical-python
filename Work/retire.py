@@ -14,8 +14,8 @@ from report import read_portfolio, make_report
 from readprices import read_prices
 from pretty_print_prices import pretty_print_prices,pretty_print_prices_tuple
 
-portfolio=read_portfolio('Data/portfolio.csv')
-prices = read_prices('Data/prices.csv')
+portfolio = read_portfolio('Data/portfolio.csv')
+prices    = read_prices('Data/prices.csv')
 
 
 purchase_total = 0
