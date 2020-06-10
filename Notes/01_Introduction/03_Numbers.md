@@ -106,7 +106,7 @@ x ** y     Power
 abs(x)     Absolute Value
 ```
 
-Theses are the same operators as Integers, except for the bit-wise operators.
+These are the same operators as Integers, except for the bit-wise operators.
 Additional math functions are found in the `math` module.
 
 ```python
@@ -234,15 +234,16 @@ The output should look something like this:
 4 10736.44 497581.83
 5 13420.55 496970.98
 ...
-308 875705.88 674.44
-309 878389.99 -2006.86
-Total paid 878389.99
-Months 309
+308 874705.88 2971.43
+309 877389.99 299.7
+310 880074.1 -2383.16
+Total paid 880074.1
+Months 310
 ```
 
 ### Exercise 1.11: Bonus
 
-While you’re at it, fix the program to correct the for overpayment that occurs in the last month.
+While you’re at it, fix the program to correct for the overpayment that occurs in the last month.
 
 ### Exercise 1.12: A Mystery
 

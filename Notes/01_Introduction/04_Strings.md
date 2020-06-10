@@ -2,7 +2,7 @@
 
 # 1.4 Strings
 
-This section introduces way to work with text.
+This section introduces ways to work with text.
 
 ### Representing Literal Text
 
@@ -134,7 +134,7 @@ t = s.replace('Hello' , 'Hallo')   # 'Hallo world'
 **More string methods:**
 
 Strings have a wide variety of other methods for testing and manipulating the text data.
-This is small sample of methods:
+This is a small sample of methods:
 
 ```python
 s.endswith(suffix)     # Check if string ends with suffix
@@ -144,7 +144,7 @@ s.isalpha()            # Check if characters are alphabetic
 s.isdigit()            # Check if characters are numeric
 s.islower()            # Check if characters are lower-case
 s.isupper()            # Check if characters are upper-case
-s.join(slist)          # Joins lists using s as delimiter
+s.join(slist)          # Join a list of strings using s as delimiter
 s.lower()              # Convert to lower case
 s.replace(old,new)     # Replace text
 s.rfind(t)             # Search for t from end of string
