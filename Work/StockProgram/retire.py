@@ -10,23 +10,19 @@ pretty_print_prices.py,readprices.py,retire.py
 
 """
 
-from report import read_portfolio, make_report
-from readprices import read_prices
-from pretty_print_prices import pretty_print_prices,pretty_print_prices_tuple
+def portfolio_report(portfolio_filename='../Data/portfolio.csv',
+                     prices_filename='../Data/prices.csv'):
+    
+    from report import read_portfolio, make_report
+    from readprices import read_prices
+    from pretty_print_prices import print_report
 
-portfolio = read_portfolio('../Data/portfolio.csv')
-prices    = read_prices('../Data/prices.csv')
+    portfolio = read_portfolio(portfolio_filename) 
+    prices    = read_prices(prices_filename)
 
+    current_total,purchase_total,stock_table = make_report(portfolio,prices)       
 
-purchase_total = 0
-current_total  = 0
+    print(f'Current portfolio value = {current_total}, '
+          f'Cost portfolio value = {purchase_total}')
 
-
-current_total,purchase_total,stock_table = make_report(portfolio,prices)       
-
-print(f'Current portfolio value = {current_total}, '
-      f'Cost portfolio value = {purchase_total}')
-
-#pretty_print_prices(portfolio)
-#print("")
-pretty_print_prices_tuple(stock_table)
+    print_report(stock_table)
