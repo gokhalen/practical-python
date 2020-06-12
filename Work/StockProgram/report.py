@@ -119,7 +119,6 @@ def main(args:list):
     portfolio_report(portfolio_filename,prices_filename)
 
 if __name__ == '__main__':
-    print('Calling main')
     args = []
     
     if (len(sys.argv) < 3):
