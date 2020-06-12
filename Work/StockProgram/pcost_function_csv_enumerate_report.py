@@ -4,6 +4,7 @@
 
 import csv
 import sys
+import report
 
 def portfolio_cost(filename):
     with open(filename,'rt') as f:
@@ -36,8 +37,13 @@ def portfolio_cost(filename):
 if len(sys.argv) == 2 :
     filename = sys.argv[1]
 else:
-    filename = 'Data/missing.csv'
+    filename = '../Data/portfolio.csv'
 
+
+portfolio=report.read_portfolio(filename)
+
+total_cost = 0
+for dd in portfolio:
+    total_cost += dd['price']*dd['shares']
 total_cost=portfolio_cost(filename)
-
 print('total_cost=',total_cost)

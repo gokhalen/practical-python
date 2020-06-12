@@ -77,11 +77,12 @@ def parse_csv(filename:str,select:list=None,
                 sys.stdout.flush()
         else:
              # case of no headers
+             # can use dict comprehension but don't know how to handle blank rows
+             records = {}
              for row in rows:
                  if not row:
                      continue
-                 record =(row[0],float(row[1]))
-                 records.append(record)
-    
+                 records[row[0]]=float(row[1])
+                     
     return records
         
