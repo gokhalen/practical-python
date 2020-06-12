@@ -34,16 +34,28 @@ def portfolio_cost(filename):
             
     return total_cost
 
-if len(sys.argv) == 2 :
-    filename = sys.argv[1]
-else:
-    filename = '../Data/portfolio.csv'
+def main(args:list):
+    if args:
+        filename = args[0]
+    else:
+        filename = '../Data/portfolio.csv'
+    
+    print(f'filename={filename}')
+    portfolio=report.read_portfolio(filename)
+    total_cost = 0
+    for dd in portfolio:
+        total_cost += dd['price']*dd['shares']
+        total_cost=portfolio_cost(filename)
+    print('total_cost=',total_cost)
+    
+    
+if __name__ == "__main__":
+    args = []
+    if len(sys.argv) < 2 :
+        print('Usage: python <portfolio_filename>')
+        print('Using default: ../Data/portfolio.csv')
+    else:
+        args=sys.argv[1:]
+    main(args)
+        
 
-
-portfolio=report.read_portfolio(filename)
-
-total_cost = 0
-for dd in portfolio:
-    total_cost += dd['price']*dd['shares']
-total_cost=portfolio_cost(filename)
-print('total_cost=',total_cost)
