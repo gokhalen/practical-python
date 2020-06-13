@@ -63,13 +63,18 @@ def read_prices(filename):
 def portfolio_report(portfolio_filename='../Data/portfolio.csv',
                      prices_filename='../Data/prices.csv'):
     
-    from fileparse import parse_csv
+    from fileparse import parse_csv_iterable
 
 #   portfolio = read_portfolio(portfolio_filename) 
 #   prices    = read_prices(prices_filename)
     
-    portfolio = parse_csv(portfolio_filename,select=['name','shares','price'],types=[str,int,float])
-    prices    = parse_csv(prices_filename,has_headers=False)
+#    portfolio = parse_csv(portfolio_filename,select=['name','shares','price'],types=[str,int,float])
+#    prices    = parse_csv(prices_filename,has_headers=False)
+    with open(portfolio_filename) as f:
+        portfolio = parse_csv_iterable(f,select=['name','shares','price'],types=[str,int,float],has_headers=True)
+        
+    with open(prices_filename) as f:
+        prices = parse_csv_iterable(f,has_headers=False)
 
     current_total,purchase_total,stock_table = make_report(portfolio,prices)       
 
