@@ -134,7 +134,7 @@ def main(args:list):
     else:
         portfolio_filename = '../Data/portfolio.csv'
         prices_filename    = '../Data/prices.csv'
-        fmt                = 'txt' 
+        fmt                = 'xls' 
     portfolio_report(portfolio_filename,prices_filename,fmt=fmt)
 
 if __name__ == '__main__':

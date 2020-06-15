@@ -5,6 +5,22 @@ Created on Mon Jun 15 13:23:32 2020
 @author: Gokhale
 """
 
+class FormatError(Exception):
+    def __init__ (self,*args):
+        if args:
+            self.message = args[0]
+        else:
+            self.message = None
+    
+    def __str__(self):
+        print('calling str')
+        if self.message:
+            return f'FormatError,{self.message}'
+        else:
+            return 'FormatError has been raised'
+    
+    pass
+
 class TableFormatter:
     
     def headings(self,headers):
@@ -65,7 +81,7 @@ def create_formatter(fmt):
     elif (fmt == 'html'):
         formatter = HTMLTableFormatter()
     else:
-        raise RunTimeError(f'Unknown format {formatter}')    
+        raise FormatError(f'Unknown format {fmt}')    
         
     return formatter
         
