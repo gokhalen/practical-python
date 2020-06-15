@@ -6,6 +6,7 @@ Created on Mon Jun 15 13:23:32 2020
 """
 
 class TableFormatter:
+    
     def headings(self,headers):
         '''
         Emit the table headings
@@ -16,7 +17,6 @@ class TableFormatter:
         '''
         Emit a single row of table data
         '''
-        
         raise NotImplementedError()
         
     
@@ -69,4 +69,26 @@ def create_formatter(fmt):
         
     return formatter
         
+def print_table(portfolio,formatter,select=['name','shares','price']):
+    
+# contrary to its name, formatter does not format
+# it assumes its input is an iterator yielding formatted strings 
+
+    formatter.headings(select)
+    
+    for pf in portfolio:
+        ll = []
+        for ss in select:
+            temp = getattr(pf,ss)
+            if (type(temp)==str):
+                ll.append(temp)
+            elif (type(temp) == int):
+                ll.append(str(temp))
+            elif (type(temp) == float):
+                ll.append(f'{temp:0.2f}')
+            else:
+                raise RuntimeError('Type conversion failed in __name__')
+        formatter.row(ll)
+        
+    
     

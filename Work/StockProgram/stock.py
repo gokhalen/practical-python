@@ -23,7 +23,7 @@ class Stock(object):
         return f'({self.name},{self.shares},{self.price})'
     
     def __repr__(self):  
-        return f'({self.name},{self.shares},{self.price})'
+        return f'stock.Stock({self.name},{self.shares},{self.price})'
     
 class MyStock(Stock):
     

@@ -72,12 +72,16 @@ def portfolio_report(portfolio_filename='../Data/portfolio.csv',
         
     with open(prices_filename) as f:
         prices = parse_csv_iterable(f,has_headers=False)
+        
+#    print(portfolio)
+#    print(prices)
     
     current_total,purchase_total,stock_table = make_report(portfolio,prices)
 
     print(f'Current portfolio value = {current_total}, '
           f'Cost portfolio value = {purchase_total}')
-
+    
+    print(stock_table)
     formatter = tableformat.create_formatter(fmt)
     print_report(stock_table,formatter)
 
