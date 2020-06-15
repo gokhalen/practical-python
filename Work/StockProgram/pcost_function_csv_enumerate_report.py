@@ -44,8 +44,7 @@ def main(args:list):
     portfolio=report.read_portfolio(filename)
     total_cost = 0
     for dd in portfolio:
-        total_cost += dd['price']*dd['shares']
-        total_cost=portfolio_cost(filename)
+        total_cost += dd.price*dd.shares
     print('total_cost=',total_cost)
     
     

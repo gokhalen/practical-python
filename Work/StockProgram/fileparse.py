@@ -8,7 +8,8 @@ Created on Thu Jun 11 13:48:50 2020
 import csv
 import sys
 import gzip
-from typing import Iterable, Union
+from   typing import Iterable,Union
+import stock
 
 def check_consistency(has_headers,select):
     try:    
@@ -57,7 +58,12 @@ def find_fields_types(rows:Union[Iterable,list],select:list,types:list,delimiter
 
 
 def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimiter=',',silence_errors=False):
-
+    assert (type(rows) != str),'parse_row_with_headers expects iterable object generated from a file or a list of strings'
+    '''
+    Creates a list of Stock objects. While the fucntion is smart enough to understand
+    to select only those fields which are specified by the user, the last line 
+    which creates stocklist assumes the existence of the fields 'name', 'shares','price'
+    '''
     records = []
     for rowno,row in enumerate(rows):
         # row is either a list of strings or a delimited string
@@ -75,7 +81,7 @@ def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimite
             try:
                 # Note the numbers in row are strings
                 # int('32.2') throws ValueError
-                record = { ff:tt(row[ii]) for ff,ii,tt in zip(foundfields,indices,foundtypes)}
+                record    = { ff:tt(row[ii]) for ff,ii,tt in zip(foundfields,indices,foundtypes)}
             except ValueError:
                 record = {}
                 if not silence_errors: print(f'Bad data in on line {rowno+2}')
@@ -83,11 +89,23 @@ def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimite
             record = { ff:row[ii] for ff,ii in zip(foundfields,indices) }
             # do not append blank records
         if record: records.append(record)
+        
+    stocklist=[stock.Stock(dd['name'],dd['shares'], dd['price']) for dd in records]
             
-    return records
+    return stocklist
 
 def parse_row_without_headers(rows:Iterable,delimiter=','):
+    '''
+        reads a prices file to return a dictionary of stocks
+        e.g.  
+              AA,492.1
+              GOOG,399.1
+        will be 
+        { 'AA':Stock('AA',0,492.1}
+        { 'GOOG': Stock('GOOG',0,399.1)}
+    '''    
     records = {}
+    assert (type(rows) != str),'parse_row_without_headers expects iterable object generated from a file or a list of strings'
     for row in rows:
         # row is either a list of strings or a delimited string
         # if blank row then skip to the next row
@@ -103,8 +121,9 @@ def parse_row_without_headers(rows:Iterable,delimiter=','):
             row = []
         if row:   
             records[row[0]]=float(row[1])
-       
-    return records
+            
+    stocklist = { key:stock.Stock(key,0,value) for key,value in records.items()}
+    return stocklist
 
 def parse_csv(filename:str,select:list=None,
               types=[],has_headers=True,delimiter=",",silence_errors=False):
@@ -173,6 +192,8 @@ def test_parse_csv_iterable(mode='raw'):
     elif mode == 'nh_raw':
         with open('../Data/prices.csv') as f:
             records = parse_csv_iterable(f,has_headers=False)
+    elif mode == 'string':
+        records = parse_csv_iterable('../Data/prices.csv',has_headers=False)
 
     print(records)
     
