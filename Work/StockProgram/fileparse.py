@@ -10,6 +10,7 @@ import sys
 import gzip
 from   typing import Iterable,Union
 import stock
+import portfolio
 
 def check_consistency(has_headers,select):
     try:    
@@ -58,12 +59,12 @@ def find_fields_types(rows:Union[Iterable,list],select:list,types:list,delimiter
 
 
 def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimiter=',',silence_errors=False):
-    assert (type(rows) != str),'parse_row_with_headers expects iterable object generated from a file or a list of strings'
     '''
-    Creates a list of Stock objects. While the fucntion is smart enough to understand
+    Creates a Portfolio of Stock objects. While the fucntion is smart enough to understand
     to select only those fields which are specified by the user, the last line 
     which creates stocklist assumes the existence of the fields 'name', 'shares','price'
     '''
+    assert (type(rows) != str),'parse_row_with_headers expects iterable object generated from a file or a list of strings'
     records = []
     for rowno,row in enumerate(rows):
         # row is either a list of strings or a delimited string
@@ -91,8 +92,9 @@ def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimite
         if record: records.append(record)
         
     stocklist=[stock.Stock(dd['name'],dd['shares'], dd['price']) for dd in records]
+    pf=portfolio.Portfolio(stocklist)
             
-    return stocklist
+    return pf
 
 def parse_row_without_headers(rows:Iterable,delimiter=','):
     '''
@@ -164,8 +166,6 @@ def parse_csv_iterable(rows:Iterable,select:list=None,
         indices = [ headers.index(ff) for ff in foundfields ]
         records = parse_row_with_headers(rows,foundfields,foundtypes,indices,delimiter,silence_errors)
     else:
-# case of no headers
-# can use dict comprehension but don't know how to handle blank rows
         records = parse_row_without_headers(rows,delimiter)
 
     return records

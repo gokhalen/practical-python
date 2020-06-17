@@ -7,6 +7,9 @@ import sys
 import report
 
 def portfolio_cost(filename):
+    '''
+    not used anymore
+    '''
     with open(filename,'rt') as f:
         rows   = csv.reader(f)
         header = next(rows)
@@ -40,11 +43,8 @@ def main(args:list):
     else:
         filename = '../Data/portfolio.csv'
     
-    print(f'filename={filename}')
     portfolio=report.read_portfolio(filename)
-    total_cost = 0
-    for dd in portfolio:
-        total_cost += dd.price*dd.shares
+    total_cost=portfolio.total_cost
     print('total_cost=',total_cost)
     
     

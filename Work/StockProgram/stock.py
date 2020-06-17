@@ -22,12 +22,10 @@ class Stock(object):
     
     @property
     def shares(self):
-        print('invoking property')
         return self._shares
     
     @shares.setter
     def shares(self,value):
-        print('invoking setter')
         if not isinstance(value,int):
             raise TypeError(f'Expected int got {type(value)}')
         if value < 0:

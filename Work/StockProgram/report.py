@@ -6,12 +6,13 @@ import csv
 import sys
 import stock
 import tableformat
+import portfolio
 
 def read_portfolio(filename):
     '''
-    returns portfolio as a list of dictionaries
+    returns Portfolio object
     '''
-    portfolio = []
+    stocklist = []
     
     with open(filename,'rt') as f:
         rows = csv.reader(f)
@@ -22,9 +23,10 @@ def read_portfolio(filename):
             shares = drow["shares"]
             price  = drow["price"]
             dd = stock.Stock(name,shares,price)
-            portfolio.append(dd)
-    
-    return portfolio
+            stocklist.append(dd)
+
+    pf = portfolio.Portfolio(stocklist)
+    return pf
 
 
 def make_report(portfolio,prices):
@@ -72,7 +74,8 @@ def portfolio_report(portfolio_filename='../Data/portfolio.csv',
         
     with open(prices_filename) as f:
         prices = parse_csv_iterable(f,has_headers=False)
-        
+    
+    
     current_total,purchase_total,stock_table = make_report(portfolio,prices)
 
     print(f'Current portfolio value = {current_total}, '
