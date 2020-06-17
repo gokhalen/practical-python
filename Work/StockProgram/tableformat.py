@@ -6,11 +6,13 @@ Created on Mon Jun 15 13:23:32 2020
 """
 
 class FormatError(Exception):
+    
     def __init__ (self,*args):
         if args:
             self.message = args[0]
         else:
             self.message = None
+        print('__init__ in FormatError called')
     
     def __str__(self):
         print('calling str')
@@ -73,16 +75,18 @@ class HTMLTableFormatter(TableFormatter):
         print('</tr><br>')
 
 def create_formatter(fmt):
-    
-    if(fmt == 'txt'):
-        formatter = TextTableFormatter()
-    elif (fmt == 'csv'):
-        formatter = CSVTableFormatter()
-    elif (fmt == 'html'):
-        formatter = HTMLTableFormatter()
-    else:
-        raise FormatError(f'Unknown format {fmt}')    
-        
+    try:
+        if(fmt == 'txt'):
+            formatter = TextTableFormatter()
+        elif (fmt == 'csv'):
+            formatter = CSVTableFormatter()
+        elif (fmt == 'html'):
+            formatter = HTMLTableFormatter()
+        else:
+            raise FormatError(f'Unknown format {fmt}')
+    except FormatError as e:
+        raise
+       
     return formatter
         
 def print_table(portfolio,formatter,select=['name','shares','price']):
