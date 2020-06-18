@@ -29,7 +29,7 @@ def read_portfolio(filename):
     return pf
 
 
-def make_report(portfolio,prices):
+def make_report(portf,prices):
     '''
     returns total purchase price (purchase_total) 
             current valuation    (current_total)
@@ -39,7 +39,7 @@ def make_report(portfolio,prices):
     current_total  = 0.0
     purchase_total = 0.0
     stock_table    = []
-    for pf in portfolio:
+    for pf in portf:
         name            = pf.name
         quantity        = pf.shares
         purchase_price  = pf.price
@@ -49,7 +49,7 @@ def make_report(portfolio,prices):
         change          = (current_price - purchase_price)
         stock_table.append((name,quantity,current_price,change))
     
-    return current_total,purchase_total,stock_table 
+    return current_total,portf.total_cost,stock_table 
 
 def read_prices(filename):
     
