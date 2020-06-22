@@ -24,13 +24,31 @@ class Portfolio:
     def __contains__(self,name):
         return any((s.name == name for s in self._holdings))
     
+    def __str__(self):
+        string=f'{"-"*20}\n'
+        for stock in self._holdings:
+            string += str(stock)+'\n'
+        string +=f'{"-"*20}\n'  
+        return string
+    
     @property
     def total_cost(self):
         return sum((s.cost for s in self._holdings))
    
-    
     def tabulate_shares(self):
         from collections import Counter
         total_shares = Counter()
         for s in self._holdings:
             total_shares[s.name] += s.shares
+    
+    def sortpf(self,key='name',rev=False):
+        if (key=='name'):
+            self._holdings.sort(key=lambda s:s.name,reverse=rev)
+        elif (key == 'price'):
+            self._holdings.sort(key=lambda s:s.price,reverse=rev)
+        elif (key == 'shares'):
+            self._holdings.sort(key=lambda s:s.shares,reverse=rev)
+            
+        
+        
+    

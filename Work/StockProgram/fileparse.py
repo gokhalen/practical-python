@@ -91,7 +91,7 @@ def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimite
             # do not append blank records
         if record: records.append(record)
         
-    stocklist=[stock.Stock(dd['name'],dd['shares'], dd['price']) for dd in records]
+    stocklist=[stock.Stock(**dd) for dd in records]     
     pf=portfolio.Portfolio(stocklist)
             
     return pf

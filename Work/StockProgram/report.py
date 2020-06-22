@@ -19,10 +19,7 @@ def read_portfolio(filename):
         headers = next(rows)
         for row in rows:
             drow = dict(zip(headers,row))
-            name   = drow["name"]
-            shares = drow["shares"]
-            price  = drow["price"]
-            dd = stock.Stock(name,shares,price)
+            dd = stock.Stock(**drow)
             stocklist.append(dd)
 
     pf = portfolio.Portfolio(stocklist)
@@ -68,15 +65,23 @@ def portfolio_report(portfolio_filename='../Data/portfolio.csv',
                      prices_filename='../Data/prices.csv',fmt='txt'):
     
     from fileparse import parse_csv_iterable
-
+    
+    opts = {}
+    opts['delimiter']=','
+    opts['silence_errors']=True
+    
     with open(portfolio_filename) as f:
-        portfolio = parse_csv_iterable(f,select=['name','shares','price'],types=[str,int,float],has_headers=True)
+        pf = parse_csv_iterable(f,select=['name','shares','price'],
+                                       types=[str,int,float],has_headers=True,
+                                       **opts)
         
     with open(prices_filename) as f:
         prices = parse_csv_iterable(f,has_headers=False)
     
-    
-    current_total,purchase_total,stock_table = make_report(portfolio,prices)
+#    pf.sortpf(key='shares',rev=False)
+#    print(pf)
+#    print(repr(pf))    
+    current_total,purchase_total,stock_table = make_report(pf,prices)
 
     print(f'Current portfolio value = {current_total}, '
           f'Cost portfolio value = {purchase_total}')
