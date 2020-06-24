@@ -8,9 +8,13 @@ Created on Thu Jun 11 13:48:50 2020
 import csv
 import sys
 import gzip
+import logging
 from   typing import Iterable,Union
-import stock
-import portfolio
+
+from . import stock
+from . import portfolio
+
+log=logging.getLogger('report')
 
 def check_consistency(has_headers,select):
     try:    
@@ -60,9 +64,8 @@ def find_fields_types(rows:Union[Iterable,list],select:list,types:list,delimiter
 
 def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimiter=',',silence_errors=False):
     '''
-    Creates a Portfolio of Stock objects. While the fucntion is smart enough to understand
-    to select only those fields which are specified by the user, the last line 
-    which creates stocklist assumes the existence of the fields 'name', 'shares','price'
+    Creates dictionaries from rows. If foundfields=['name','shares','price'] then
+    dictionary objects will look like this: {'name':GOOG, 'shares':100, 'price':490.1}
     '''
     assert (type(rows) != str),'parse_row_with_headers expects iterable object generated from a file or a list of strings'
     records = []
@@ -83,18 +86,28 @@ def parse_row_with_headers(rows:Iterable,foundfields,foundtypes,indices,delimite
                 # Note the numbers in row are strings
                 # int('32.2') throws ValueError
                 record    = { ff:tt(row[ii]) for ff,ii,tt in zip(foundfields,indices,foundtypes)}
-            except ValueError:
+            except ValueError as e:
                 record = {}
-                if not silence_errors: print(f'Bad data in on line {rowno+2}')
+                if not silence_errors:
+                    pass
+                    # log is a reference to a logger named 'debug_username'
+                    # the logging module is smart enough to coordinate 
+                    # the logger defined as 'debug_username' in report.py
+                    log = logging.getLogger('debug_loggername')
+                    log.debug("Row %d: Reason %s",rowno+2,e)
+                    log.warning("Row %d: Couldn't convert %s",rowno+2,row)
+                    log.critical('from core in parse_row_with_headers')
+                    
+                    # similarly, now log is a reference to a logger named 'critical_username'
+       
+                    log = logging.getLogger('critical_loggername')
+                    log.critical('Hello')
+
         else:   
             record = { ff:row[ii] for ff,ii in zip(foundfields,indices) }
             # do not append blank records
         if record: records.append(record)
-        
-    stocklist=[stock.Stock(**dd) for dd in records]     
-    pf=portfolio.Portfolio(stocklist)
-            
-    return pf
+    return records
 
 def parse_row_without_headers(rows:Iterable,delimiter=','):
     '''

@@ -5,6 +5,9 @@ Created on Mon Jun 22 11:40:37 2020
 @author: Gokhale
 """
 
+String  = lambda name:typedproperty(name,str)
+Integer = lambda name:typedproperty(name,int)
+Float   = lambda name:typedproperty(name,float)
 
 def typedproperty(name,expected_type):
     private_name = '_' + name

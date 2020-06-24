@@ -4,9 +4,12 @@
 
 import csv
 import sys
-import stock
-import tableformat
-import portfolio
+import logging
+
+from . import stock
+from . import tableformat
+from . import portfolio
+
 
 def read_portfolio(filename):
     '''
@@ -17,12 +20,18 @@ def read_portfolio(filename):
     with open(filename,'rt') as f:
         rows = csv.reader(f)
         headers = next(rows)
+        types = [str, int, float]
         for row in rows:
-            drow = dict(zip(headers,row))
+            drow = [ func(word) for word,func in zip(row,types)]
+            drow = dict(zip(headers,drow))
             dd = stock.Stock(**drow)
             stocklist.append(dd)
 
-    pf = portfolio.Portfolio(stocklist)
+    pf = portfolio.Portfolio()
+    
+    for s in stocklist:
+        pf.append(s)
+    
     return pf
 
 
@@ -64,23 +73,20 @@ def read_prices(filename):
 def portfolio_report(portfolio_filename='../Data/portfolio.csv',
                      prices_filename='../Data/prices.csv',fmt='txt'):
     
-    from fileparse import parse_csv_iterable
+    
+    from .fileparse import parse_csv_iterable
     
     opts = {}
     opts['delimiter']=','
-    opts['silence_errors']=True
+    opts['silence_errors']=False
     
-    with open(portfolio_filename) as f:
-        pf = parse_csv_iterable(f,select=['name','shares','price'],
-                                       types=[str,int,float],has_headers=True,
-                                       **opts)
         
+    with open(portfolio_filename) as f:
+        pf = portfolio.Portfolio.from_csv(f,**opts)
+    
     with open(prices_filename) as f:
         prices = parse_csv_iterable(f,has_headers=False)
     
-#    pf.sortpf(key='shares',rev=False)
-#    print(pf)
-#    print(repr(pf))    
     current_total,purchase_total,stock_table = make_report(pf,prices)
 
     print(f'Current portfolio value = {current_total}, '
@@ -132,13 +138,14 @@ def print_report_old(ll):
     
 def main(args:list):
     if args:
-        portfolio_filename = args[0]
-        prices_filename    = args[1]
-        fmt                = args[2]
+        portfolio_filename = args[1]
+        prices_filename    = args[2]
+        fmt                = args[3]
     else:
         portfolio_filename = '../Data/portfolio.csv'
         prices_filename    = '../Data/prices.csv'
         fmt                = 'txt' 
+        
     portfolio_report(portfolio_filename,prices_filename,fmt=fmt)
 
 if __name__ == '__main__':
@@ -149,5 +156,26 @@ if __name__ == '__main__':
         print('Using defaults ../Data/portfolio.csv ../Data/prices.csv fmt="txt"')
     else:
         args = sys.argv[1:4]
+        
+    '''
+    logging.basicConfig(
+    filename='logdebug',
+    filemode='w',
+    level=logging.DEBUG 
+    )
+    '''
+
+    logdebug=logging.getLogger('debug_loggername')
+    filehandler=logging.FileHandler('logdebug', mode='w')
+    logdebug.addHandler(filehandler)
+    logdebug.setLevel(logging.DEBUG)
+    logdebug.debug('debug_message')
     
+    logcrit=logging.getLogger('critical_loggername')
+    filehandler=logging.FileHandler('logcritical', mode='w')
+    logcrit.addHandler(filehandler)
+    logcrit.setLevel(logging.CRITICAL)
+    logcrit.critical('critical_message')
+    
+
     main(args)    
